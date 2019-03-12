@@ -18,7 +18,7 @@ namespace OrderBy {
 
         static bool Order(DbContextOptions options) {
             using (var context = new MyContext(options)) {
-                var rs = context.Students.OrderBy(x => x.ThaiText).Select(x => new { Text = x.ThaiText });
+                var rs = context.Students.OrderBy(x => x.TA).Select(x => new { Text = x.TA });
                 DynamicTables.DynamicTable.From(rs).Write();
             }
             return true;

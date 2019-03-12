@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 using System.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OrderBy {
     class Text {
@@ -37,24 +38,22 @@ namespace OrderBy {
         [Key]
         public int Id { set; get; }
         public string Name { set; get; }
-        public string Profile1 { set; get; }
-        public string Profile2 { set; get; }
-        public string Profile3 { set; get; }
-        public string ThaiText { set; get; } = Text.A[new Random().Next(Text.A.Length)];
+        public string TA { set; get; } = Text.A[new Random().Next(Text.A.Length)];
 
-        // public NpgsqlTsVector SearchVector { get; set; }
+        [Column("TB", TypeName = "Text COLLATE \"C\"")]
+        public string TB { set; get; } = Text.A[new Random().Next(Text.A.Length)];
+        public string TC { set; get; } = Text.A[new Random().Next(Text.A.Length)];
     }
 
     public class MyContext : DbContext {
-        public MyContext(DbContextOptions options) : base(options) {
+        public MyContext(DbContextOptions options) : base(options) { }
 
-        }
         public DbSet<Student> Students { set; get; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            // modelBuilder.Entity<Student>()
-            //     .HasIndex(p => p.SearchVector)
-            //     .ForNpgsqlHasMethod("GIN");
+            modelBuilder.Entity<Student>()
+                .Property(x => x.TA)
+                .HasAnnotation("COLLATE", "th-TH-x-icu");
         }
 
     }
